@@ -28,7 +28,7 @@ def latest_news(channel_name):
     url = url.replace('https://t.me/', '')
     channel_name, news_id = url.split('/')
     urls = []
-    for i in range(5):
+    for i in range(10):
         urls.append(f'{channel_name}/{int(news_id) - i}')
     return urls
 
@@ -137,6 +137,19 @@ def news_page3():
     urls = latest_news(channel_name)
     return render_template('newss.html', urls=urls)
 
+@app.route("/world", methods=["GET"])
+def news_page2():
+    urls = []
+    channel_name = 'rian_ru'
+    urls = latest_news(channel_name)
+    return render_template('newss.html', urls=urls)
+
+@app.route("/memes", methods=["GET"])
+def news_page1():
+    urls = []
+    channel_name = 'inoshapotyan'
+    urls = latest_news(channel_name)
+    return render_template('newss.html', urls=urls)
 
 @app.route('/news/<int:id>', methods=['GET', 'POST'])
 @login_required
