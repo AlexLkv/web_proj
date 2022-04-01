@@ -1,0 +1,12 @@
+body{
+    min-width: 320px;
+    font-size: 14px;
+    font-family: "cursive", serif;
+    color: #626262;
+}
+a{
+    color: #b4ad9e;
+}
+a:hover{
+    color: #898377;
+}
