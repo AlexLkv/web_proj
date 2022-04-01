@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form action="" method="post" novalidate>
+    {{ form['form_reg'].hidden_tag() }}
+    {{ form['form_log'].hidden_tag() }}
+    <div class="section">
+        <div class="container">
+            <center>
+                <div class="row full-height justify-content-center">
+                    <div class="col-12 text-center align-self-center py-5">
+                        <div class="section pb-5 pt-5 pt-sm-2 text-center">
+                            <h6 class="mb-0 pb-3"><span>Log In </span><span>Sign Up</span></h6>
+                            <input class="checkbox" type="checkbox" id="reg-log" name="reg-log"/>
+                            <label for="reg-log"></label>
+                            <div class="card-3d-wrap mx-auto">
+                                <div class="card-3d-wrapper">
+                                    <div class="card-front">
+                                        <div class="center-wrap">
+                                            <div class="section text-center">
+                                                <h4 class="mb-4 pb-3">Войти</h4>
+                                                <div class="form-group">
+                                                        {{ form["form_log"].email(class="form-style", type="email",
+                                                        placeholder="Your Email") }}
+                                                        {% for error in form["form_log"].email.errors %}
+                                                    <div class="alert alert-danger" role="alert">
+                                                        {{ error }}
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                                <div class="form-group mt-2">
+                                                        {{ form["form_log"].password(type="password", class="form-style",
+                                                        placeholder="Your Password") }}<br>
+                                                        {% for error in form["form_log"].password.errors %}
+                                                    <div class="alert alert-danger" role="alert">
+                                                        {{ error }}
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                                <p>{{ form["form_log"].remember_me() }} {{ form["form_log"].remember_me.label }}</p>
+                                                <p>{{ form["form_log"].submit(type="submit", class="btn mt-4") }}</p>
+                                                <div>{{ message }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-back">
+                                        <div class="center-wrap">
+                                            <div class="section text-center">
+                                                <h4 class="mb-4 pb-3">Зарегистрироваться</h4>
+                                                <div class="form-group">
+                                                        {{ form["form_reg"].email(type="text", class="form-style",
+                                                        placeholder="Your email") }}<br>
+                                                        {% for error in form["form_reg"].email.errors %}
+                                                    <p class="alert alert-danger" role="alert">
+                                                        {{ error }}
+                                                    </p>
+                                                    {% endfor %}
+                                                </div>
+                                                <div class="form-group mt-2">
+                                                        {{ form["form_reg"].password(type="password", class="form-style",
+                                                        placeholder="Your Password") }}<br>
+                                                        {% for error in form["form_reg"].password.errors %}
+                                                    <p class="alert alert-danger" role="alert">
+                                                        {{ error }}
+                                                    </p>
+                                                    {% endfor %}
+                                                </div>
+                                                <div class="form-group mt-2">
+                                                        {{ form["form_reg"].password(type="password", class="form-style",
+                                                        placeholder="Your Password Answer") }}<br>
+                                                        {% for error in form["form_reg"].password.errors %}
+                                                    <p class="alert alert-danger" role="alert">
+                                                        {{ error }}
+                                                    </p>
+                                                    {% endfor %}
+                                                </div>
+                                                <div class="form-group mt-2">
+                                                        {{ form["form_reg"].name(class="form-style", placeholder="Your Name") }}<br>
+                                                        {% for error in form["form_reg"].name.errors %}
+                                                    <p class="alert alert-danger" role="alert">
+                                                        {{ error }}
+                                                    </p>
+                                                    {% endfor %}
+                                                </div>
+                                                <p>{{ form["form_reg"].submit(type="submit", class="btn mt-4") }}</p>
+                                                {{message}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </center>
+        </div>
+    </div>
+</form>
+{% endblock %}
