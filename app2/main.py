@@ -1,18 +1,36 @@
 from os import abort
+
+import requests
+from bs4 import BeautifulSoup
 from flask import Flask, redirect, render_template, request
-from forms.user import RegisterForm, LoginForm
-from forms.news import NewsForm
-import db_session
-from users import User
-from news import News
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 
+import db_session
+from forms.news import NewsForm
+from forms.user import RegisterForm, LoginForm
+from news import News
+from users import User
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+
+def latest_news(channel_name):
+    telegram_url = 'https://t.me/s/'
+    url = telegram_url + channel_name
+    r = requests.get(url)
+    soup = BeautifulSoup(r.text, 'lxml')
+    link = soup.find_all("a")
+    url = link[-1]['href']
+    url = url.replace('https://t.me/', '')
+    channel_name, news_id = url.split('/')
+    urls = []
+    for i in range(5):
+        urls.append(f'{channel_name}/{int(news_id) - i}')
+    return urls
 
 
 def main():
@@ -35,7 +53,7 @@ def index():
             (News.user == current_user) | (News.is_private != True))
     else:
         news = db_sess.query(News).filter(News.is_private != True)
-    return render_template("index.html", news=news)
+    return render_template("ind.html", news=news)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -86,7 +104,7 @@ def logout():
     return redirect("/")
 
 
-@app.route('/news',  methods=['GET', 'POST'])
+@app.route('/news', methods=['GET', 'POST'])
 @login_required
 def add_news():
     form = NewsForm()
@@ -102,6 +120,22 @@ def add_news():
         return redirect('/')
     return render_template('news.html', title='Добавление новости',
                            form=form)
+
+
+@app.route("/it-tech", methods=["GET"])
+def news_page4():
+    urls = []
+    channel_name = 'habr_com'
+    urls = latest_news(channel_name)
+    return render_template('newss.html', urls=urls)
+
+
+@app.route("/about-us", methods=["GET"])
+def news_page3():
+    urls = []
+    channel_name = 'requiem_site'
+    urls = latest_news(channel_name)
+    return render_template('newss.html', urls=urls)
 
 
 @app.route('/news/<int:id>', methods=['GET', 'POST'])
