@@ -3,9 +3,9 @@ from aiogram import Bot, types
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
 import emoji
-from flask_login import login_user
 import db_session
-import main
+from main import load_user
+from users import User
 from news import News
 
 TOKEN = '5330961932:AAE4raRPL_4YWvhoszimBDRL8dODuL6K6FE'
@@ -22,10 +22,11 @@ async def help(msg: types.Message):
                            f'введите команду "/show_news [кол-во новостей]"\n\n'
                            f'{emoji.emojize("🟪")}Чтобы Добавить новость, введите "/add_news", но для этого нужно быть '
                            f'зарегистрированным.\n'
-                           f'Введите всё по примеру, подставляя свои данные: "/add_news [email]&&[password]&&[title_news]&&'
-                           f'[content]"\n\n'
+                           f'Введите всё по примеру, подставляя свои данные: "/add_news '
+                           f'[email]&&[password]&&[title_news]&&[content]"\n\n'
                            f'{emoji.emojize("🟦")}Если вы в первый раз и хотите зарегистрироваться, введите команду '
-                           f'"/register" \nВведите всё по примеру, подставляя свои данные: "/register [our name]&&[our email]&&[password]'
+                           f'"/register" \nВведите всё по примеру, подставляя свои данные: '
+                           f'"/register [our name]&&[our email]&&[password]'
                            f'&&[answer our password]"')
 
 
@@ -58,10 +59,10 @@ async def add_news(msg: types.Message):
     text = msg.text[11:-1].split(']&&[')
     if len(text) == 4:
         db_sess = db_session.create_session()
-        from app2.users import User
         user = db_sess.query(User).filter(User.email == text[0]).first()
-        if user and user.check_password(text[0]):
-            main.load_user(user.id)
+        await bot.send_message(msg.from_user.id, text)
+        if user and user.check_password(text[1]):
+            load_user(user.id)
             news = News()
             news.title = text[2]
             news.content = text[3]
@@ -69,17 +70,37 @@ async def add_news(msg: types.Message):
             user.news.append(news)
             db_sess.merge(user)
             db_sess.commit()
+            await bot.send_message(msg.from_user.id, "Вы успешно добавили новость! Если Хотите получить"
+                                                     "больше возможностей, переходите к нам на сайт")
+        else:
+            await bot.send_message(msg.from_user.id, "Введённые данные неверны")
+    else:
+        await bot.send_message(msg.from_user.id, "Не соблюдены правила написания")
 
 
 @dp.message_handler(commands=['register'])
 async def register(msg: types.Message):
-    n = int(msg.text[11:])
+    text = msg.text[11:-1].split(']&&[')
     con = sqlite3.connect("app2/db/blogs.db", check_same_thread=False)
-    cur = con.cursor()
-    news = cur.execute(
-        f"SELECT (SELECT name FROM users WHERE id = user_id), "
-        f"created_date, title, content, img FROM news ORDER BY id DESC LIMIT {n}").fetchall()
-    con.close()
+    if text[2] == text[3]:
+        if '@' in text[1] and '&' not in text[1]:
+            db_sess = db_session.create_session()
+
+            if db_sess.query(User).filter(User.email == text[2]).first():
+                await bot.send_message(msg.from_user.id, "Такой пользователь уже есть")
+            else:
+                user = User(
+                    name=text[0],
+                    email=text[1],
+                )
+                user.set_password(text[2])
+                db_sess.add(user)
+                db_sess.commit()
+                await bot.send_message(msg.from_user.id, "Ваш аккаунт успешно зарегистрирован!")
+        else:
+            await bot.send_message(msg.from_user.id, "В логине нет '@' или есть '&'")
+    else:
+        await bot.send_message(msg.from_user.id, "Пароли не верны")
 
 
 @dp.message_handler(content_types=['text'])
@@ -88,4 +109,5 @@ async def main(msg: types.Message):
 
 
 if __name__ == '__main__':
+    db_session.global_init("app2/db/blogs.db")
     executor.start_polling(dp)

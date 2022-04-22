@@ -2,10 +2,10 @@ from os import abort
 
 import requests
 from bs4 import BeautifulSoup
-from flask import Flask, redirect, render_template, request
+from flask import Flask, redirect, render_template, request, jsonify, make_response
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
-
 import db_session
+from app2 import news_users_api
 from forms.news import NewsForm
 from news import News
 from users import User
@@ -34,8 +34,13 @@ def latest_news(channel_name):
 
 def main():
     db_session.global_init("db/blogs.db")
+    app.register_blueprint(news_users_api.blueprint)
     app.run()
 
+
+@app.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify({'error': 'Not found'}), 404)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -52,7 +57,8 @@ def index1():
             (News.user == current_user) | (News.is_private != True))
     else:
         news = db_sess.query(News).filter(News.is_private != True)
-    return render_template("newss.html", news=news)
+    return render_template("ind"
+                           ".html", news=news)
 
 
 @app.route("/news_local", methods=['GET', 'POST'])
@@ -72,7 +78,6 @@ def reqister():
     if request.method == 'POST':
         if request.form.get('username') and request.form.get('email') \
                 and request.form.get('pass1') and request.form.get('pass2'):
-
             if request.form.get('pass1') != request.form.get('pass2'):
                 return render_template('register.html',
                                        message="Пароли не совпадают")
