@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -8,17 +7,77 @@
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
           crossorigin="anonymous">
-    <link type="text/css" href="{{ url_for('static', filename='css/style_reg_auth.css')}}" rel="stylesheet" />
+    <link type="text/css" href="{{ url_for('static', filename='css/style_reg_auth.css')}}" rel="stylesheet">
     <title>{{title}}</title>
 </head>
 <body>
-<header>
-    <p align="right">
-        <a class="btn btn-primary" href="/">Вернуться назад</a>
-    </p>
-</header>
 <main role="main" class="container">
     {% block content %}{% endblock %}
 </main>
 </body>
 </html>
+
+<article class="latestPost excerpt">
+    <div class="post-info">
+        <div class="post-info-left">
+            <div class="author-image"><img alt=""
+                                           src="https://secure.gravatar.com/avatar/739cd013b007c9abeaf2927f796225b9?s=60&amp;d=mm&amp;r=g"
+                                           srcset="https://secure.gravatar.com/avatar/739cd013b007c9abeaf2927f796225b9?s=120&amp;d=mm&amp;r=g 2x"
+                                           class="avatar avatar-60 photo" height="60" width="60"
+                                           loading="lazy"></div>
+            <div class="author-info">
+                <div class="vcard"><a
+                        href="https://demo.mythemeshop.com/socialme/author/dewde/"
+                        class="fn">Ames Myers</a></div>
+                <div class="thetime updated"><span>April 11, 2016</span></div>
+            </div>
+        </div>
+        <div class="thecomment">
+            <a href="https://demo.mythemeshop.com/socialme/2016/04/11/these-incredible-portraits-werent-captured-with-a-camera-but-with-a-pencil/#comments"
+               itemprop="interactionCount"><i class="fa fa-comment"></i>13
+                Comments</a>
+        </div>
+    </div>
+    <header>
+        <h2 class="title front-view-title"><a
+                href="https://demo.mythemeshop.com/socialme/2016/04/11/these-incredible-portraits-werent-captured-with-a-camera-but-with-a-pencil/"
+                title="These Incredible Portraits Weren’t Captured With A Camera, But With A Pencil.">These
+            Incredible Portraits Weren’t Captured With A Camera, But With A
+            Pencil.</a></h2>
+    </header>
+
+    <a title="These Incredible Portraits Weren’t Captured With A Camera, But With A Pencil."
+       id="featured-thumbnail">
+        <div class="featured-thumbnail">
+            <img src=""
+                 class="wp-post-image" width="530" height="250">
+            <div
+                    class="review-type-star latestPost-review-wrapper wp-review-show-total wp-review-total-25 wp-review-total-star">
+                <div class="review-star">
+                    <div class="review-result-wrapper" style="color: #dedcdc;">
+                        <i class="mts-icon-star"></i>
+                        <i class="mts-icon-star"></i>
+                        <i class="mts-icon-star"></i>
+                        <i class="mts-icon-star"></i>
+                        <i class="mts-icon-star"></i>
+
+                        <div class="review-result" style="width:100%; color:#fff;">
+                            <i class="mts-icon-star"></i>
+                            <i class="mts-icon-star"></i>
+                            <i class="mts-icon-star"></i>
+                            <i class="mts-icon-star"></i>
+                            <i class="mts-icon-star"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </a>
+    <div class="front-view-content">
+        It’s only a model. No, no, no! Yes, yes. A bit. But she’s got a wart. He
+        hasn’t got shit all over him. Well, Mercia’s a temperate zone! The Lady of
+        the Lake, her arm&nbsp;…
+    </div>
+</article>
