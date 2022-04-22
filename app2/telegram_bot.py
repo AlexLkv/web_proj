@@ -61,6 +61,7 @@ async def add_news(msg: types.Message):
         from app2.users import User
         user = db_sess.query(User).filter(User.email == text[0]).first()
         if user and user.check_password(text[0]):
+            main.load_user(user.id)
             news = News()
             news.title = text[2]
             news.content = text[3]
