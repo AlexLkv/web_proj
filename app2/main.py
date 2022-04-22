@@ -1,5 +1,4 @@
 from os import abort
-
 import requests
 from bs4 import BeautifulSoup
 from flask import Flask, redirect, render_template, request, jsonify, make_response

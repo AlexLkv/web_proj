@@ -9,7 +9,6 @@ from flask_login import UserMixin
 
 class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     __tablename__ = 'users'
-    __table_args__ = {'extend_existing': True}
 
     id = sqlalchemy.Column(sqlalchemy.Integer,
                            primary_key=True, autoincrement=True)
