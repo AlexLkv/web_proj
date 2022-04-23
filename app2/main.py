@@ -158,7 +158,7 @@ def news_page4():
     urls = []
     channel_name = 'habr_com'
     urls = latest_news(channel_name)
-    return render_template('newss.html', urls=urls)
+    return render_template('news_telega.html', urls=urls)
 
 
 @app.route("/about-us", methods=["GET"])
@@ -166,7 +166,7 @@ def news_page3():
     urls = []
     channel_name = 'requiem_site'
     urls = latest_news(channel_name)
-    return render_template('newss.html', urls=urls)
+    return render_template('news_telega.html', urls=urls)
 
 
 @app.route("/world", methods=["GET"])
@@ -174,14 +174,14 @@ def news_page2():
     urls = []
     channel_name = 'rian_ru'
     urls = latest_news(channel_name)
-    return render_template('newss.html', urls=urls)
+    return render_template('news_telega.html', urls=urls)
 
 
 @app.route("/memes", methods=["GET"])
 def news_page1():
     channel_name = 'inoshapotyan'
     urls = latest_news(channel_name)
-    return render_template('newss.html', urls=urls)
+    return render_template('news_telega.html', urls=urls)
 
 
 @app.route('/news/<int:id>', methods=['GET', 'POST'])
