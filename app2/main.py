@@ -1,10 +1,13 @@
+import os
+from io import BytesIO
 from os import abort
 import requests
+from PIL import Image
 from bs4 import BeautifulSoup
 from flask import Flask, redirect, render_template, request, jsonify, make_response
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 import db_session
-from app2 import news_users_api
+import news_users_api
 from forms.news import NewsForm
 from news import News
 from users import User
@@ -49,15 +52,24 @@ def load_user(user_id):
 
 @app.route("/", methods=['GET', 'POST'])
 def index1():
+    img = ''
     db_sess = db_session.create_session()
+    if request.method == 'POST':
+        print(request.files['f'])
+        f = request.files['f']
+        image = Image.open(BytesIO(f.read()))
+        image.save(f'static/img/{f.filename}')
+        user = db_sess.query(User).filter(User == current_user).first()
+        user.img = user.id + f.filename.split('.')[-1]
+        db_sess.commit()
+        img = os.listdir('static/img')
     news = db_sess.query(News).filter(News.is_private != True)
     if current_user.is_authenticated:
         news = db_sess.query(News).filter(
             (News.user == current_user) | (News.is_private != True))
     else:
         news = db_sess.query(News).filter(News.is_private != True)
-    return render_template("ind"
-                           ".html", news=news)
+    return render_template("ind.html", news=news, img=img)
 
 
 @app.route("/news_local", methods=['GET', 'POST'])
@@ -105,7 +117,8 @@ def login():
         if request.form.get('email') and request.form.get('pass'):
             db_sess = db_session.create_session()
             user = db_sess.query(User).filter(User.email == request.form.get('email')).first()
-            if user and user.check_password(request.form.get('email')):
+
+            if user and user.check_password(request.form.get('pass')):
                 login_user(user)
                 return redirect("/")
             return render_template('login.html',

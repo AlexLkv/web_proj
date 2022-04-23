@@ -105,7 +105,8 @@ async def register(msg: types.Message):
 
 @dp.message_handler(content_types=['text'])
 async def main(msg: types.Message):
-    await bot.send_message(msg.from_user.id, "Скорее всего вы имели в виду, что-то другое")
+    await bot.send_message(msg.from_user.id, "Скорее всего вы имели в виду, что-то другое\n"
+                                             "Чтобы посмотреть все функции напишите команду /help")
 
 
 if __name__ == '__main__':

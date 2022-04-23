@@ -1,62 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Регистрация</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" type="text/css" href="static/css/log_reg_util.css">
-	<link rel="stylesheet" type="text/css" href="static/css/log_reg_main.css">
+    <title>Регистрация</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="static/css/log_reg_util.css">
+    <link rel="stylesheet" type="text/css" href="static/css/log_reg_main.css">
 </head>
 <body>
 
 
-	<div class="container-login100">
-		<div class="wrap-login100 p-l-55 p-r-55 p-t-80 p-b-30">
-			<form method="post" class="login100-form validate-form">
+<div class="container-login100">
+    <div class="wrap-login100 p-l-55 p-r-55 p-t-80 p-b-30">
+        <form method="post" class="login100-form validate-form">
 				<span class="login100-form-title p-b-37">
 					Регистрация
 				</span>
-				<div class="wrap-input100 validate-input m-b-20" data-validate="Enter username">
-					<input class="input100" type="text" name="username" placeholder="Имя пользователя">
-					<span class="focus-input100"></span>
-				</div>
-				<div class="wrap-input100 validate-input m-b-20" data-validate="Enter email">
-					<input class="input100" type="text" name="email" placeholder="Почта">
-					<span class="focus-input100"></span>
-				</div>
+            <center><img src="{{ url_for('static', filename='img/cat.jpg')}}" alt="Avatar" class="avatar">
+                <br></center>
+            <div class="wrap-input100 validate-input m-b-20" data-validate="Enter username">
+                <input class="input100" type="text" name="username" placeholder="Имя пользователя">
+                <span class="focus-input100"></span>
+            </div>
+            <div class="wrap-input100 validate-input m-b-20" data-validate="Enter email">
+                <input class="input100" type="text" name="email" placeholder="Почта">
+                <span class="focus-input100"></span>
+            </div>
 
-				<div class="wrap-input100 validate-input m-b-25" data-validate = "Enter password">
-					<input class="input100" type="password" name="pass1" placeholder="Пароль">
-					<span class="focus-input100"></span>
-				</div>
+            <div class="wrap-input100 validate-input m-b-25" data-validate="Enter password">
+                <input class="input100" type="password" name="pass1" placeholder="Пароль">
+                <span class="focus-input100"></span>
+            </div>
 
-				<div class="wrap-input100 validate-input m-b-25" data-validate = "Enter password">
-					<input class="input100" type="password" name="pass2" placeholder="Повторите пароль">
-					<span class="focus-input100"></span>
-				</div>
+            <div class="wrap-input100 validate-input m-b-25" data-validate="Enter password">
+                <input class="input100" type="password" name="pass2" placeholder="Повторите пароль">
+                <span class="focus-input100"></span>
+            </div>
 
-				<p align="center">{{ message }} <br></p>
+            <p align="center">{{ message }} <br></p>
 
-				<div class="container-login100-form-btn">
-					<button class="login100-form-btn">
-						Зарегистрироваться
-					</button>
-				</div>
+            <div class="container-login100-form-btn">
+                <button class="login100-form-btn">
+                    Зарегистрироваться
+                </button>
+            </div>
 
-				<div class="text-center">
-					<a href="\login" class="txt2 hov1"><br>
-						Войти
-					</a>
-				</div>
-				<div class="text-center">
-					<a href="/" class="txt2 hov1">
-						Вернуться в главное меню
-					</a>
-				</div>
-			</form>
+            <div class="text-center">
+                <a href="\login" class="txt2 hov1"><br>
+                    Войти
+                </a>
+            </div>
+            <div class="text-center">
+                <a href="/" class="txt2 hov1">
+                    Вернуться в главное меню
+                </a>
+            </div>
+        </form>
 
 
-		</div>
-	</div>
+    </div>
+</div>
 </body>
 </html>
