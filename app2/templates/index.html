@@ -1,29 +1,75 @@
-{% extends "base.html" %}
+{% extends "ind.html" %}
 
-{% block content123 %}
-<h1>Записи в блоге</h1>
-{% if current_user.is_authenticated %}
-<a href="news" class="btn btn-secondary">Добавить новость</a>
-{% endif %}
+{% block content %}
+<h1 align="center">Записи пользователей</h1>
 {% for item in news%}
-<div class="col-md6 border rounded">
-    <h2>{{item.title}}</h2>
-    <div>
+<article class="latestPost excerpt">
+    <div class="post-info">
+        <div class="post-info-left">
+            <div class="author-image"><img alt=""
+                                           src="https://secure.gravatar.com/avatar/739cd013b007c9abeaf2927f796225b9?s=60&amp;d=mm&amp;r=g"
+                                           class="avatar avatar-60 photo" height="60"
+                                           width="60"
+                                           loading="lazy"></div>
+            <div class="author-info">
+                <div class="vcard"><a
+                        class="fn">{{ item.user.name }}</a></div>
+                <div class="thetime updated"><span>{{item.created_date}}</span></div>
+            </div>
+        </div>
+        <div class="thecomment">
+            <a itemprop="interactionCount"><i class="fa fa-comment"></i>13
+                Comments</a>
+        </div>
+    </div>
+    <header>
+        <h2 class="title front-view-title"><a>{{ item.title }}</a></h2>
+    </header>
+
+    <a title=""
+       id="featured-thumbnail">
+        <div class="featured-thumbnail">
+            <img src="https://demo.mythemeshop.com/socialme/files/2015/04/pencil-530x250.jpg"
+                 class="wp-post-image" width="530" height="250">
+            <div
+                    class="review-type-star latestPost-review-wrapper wp-review-show-total wp-review-total-25 wp-review-total-star">
+                <div class="review-star">
+                    <div class="review-result-wrapper" style="color: #dedcdc;">
+                        <i class="mts-icon-star"></i>
+                        <i class="mts-icon-star"></i>
+                        <i class="mts-icon-star"></i>
+                        <i class="mts-icon-star"></i>
+                        <i class="mts-icon-star"></i>
+
+                        <div class="review-result" style="width:100%; color:#fff;">
+                            <i class="mts-icon-star"></i>
+                            <i class="mts-icon-star"></i>
+                            <i class="mts-icon-star"></i>
+                            <i class="mts-icon-star"></i>
+                            <i class="mts-icon-star"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </a>
+    <div class="front-view-content">
         {{item.content}}
     </div>
+        {% if current_user.is_authenticated and current_user == item.user %}
     <div>
-        Автор - {{item.user.name}}, Дата написания - {{item.created_date}}
-    </div>
-    {% if current_user.is_authenticated and current_user == item.user %}
-    <div>
-        <a href="/news/{{ item.id }}" class="btn btn-warning">
+        <a href="/news/{{ item.id }}" class="btn btn-dark">
             Изменить
         </a>
-        <a href="/news_delete/{{ item.id }}" class="btn btn-danger">
+        <a href="/news_delete/{{ item.id }}" class="btn btn-primary">
             Удалить
         </a>
     </div>
     {% endif %}
-</div>
+</article>
 {% endfor %}
+<div> <h5 align="center"><br><br>На этом пока всё.&#128532; Удачи!
+    <br><br></h5></div>
 {% endblock %}

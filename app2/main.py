@@ -44,6 +44,7 @@ def main():
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
 
+
 @login_manager.user_loader
 def load_user(user_id):
     db_sess = db_session.create_session()
@@ -63,13 +64,14 @@ def index1():
         user.img = user.id + f.filename.split('.')[-1]
         db_sess.commit()
         img = os.listdir('static/img')
-    news = db_sess.query(News).filter(News.is_private != True)
+
+    news = db_sess.query(News).filter(News.is_private != True).order_by(News.id.desc()).all()
     if current_user.is_authenticated:
-        news = db_sess.query(News).filter(
-            (News.user == current_user) | (News.is_private != True))
+        news = db_sess.query(News).filter((News.user == current_user) | (News.is_private != True))\
+            .order_by(News.id.desc()).all()
     else:
-        news = db_sess.query(News).filter(News.is_private != True)
-    return render_template("ind.html", news=news, img=img)
+        news = db_sess.query(News).filter(News.is_private != True).order_by(News.id.desc()).all()
+    return render_template("index.html", news=news, img=img)
 
 
 @app.route("/news_local", methods=['GET', 'POST'])
@@ -92,7 +94,7 @@ def reqister():
             if request.form.get('pass1') != request.form.get('pass2'):
                 return render_template('register.html',
                                        message="Пароли не совпадают")
-            if '@'not in request.form.get('email') or '&' in request.form.get('email'):
+            if '@' not in request.form.get('email') or '&' in request.form.get('email'):
                 return render_template('register.html',
                                        message="В логине нет '@' или есть '&'")
             db_sess = db_session.create_session()
