@@ -53,24 +53,21 @@ def load_user(user_id):
 
 @app.route("/", methods=['GET', 'POST'])
 def index1():
-    img = ''
     db_sess = db_session.create_session()
     if request.method == 'POST':
-        print(request.files['f'])
         f = request.files['f']
-        image = Image.open(BytesIO(f.read()))
-        image.save(f'static/img/{f.filename}')
-        user = db_sess.query(User).filter(User == current_user).first()
-        user.img = user.id + f.filename.split('.')[-1]
+        user = db_sess.query(User).filter(User.id == current_user.id).first()
+        user.img = str(current_user.id) + '.' + str(f.filename.split('.')[-1])
         db_sess.commit()
-        img = os.listdir('static/img')
+        image = Image.open(BytesIO(f.read()))
+        image.save(f'static/img/{user.img}')
 
     if current_user.is_authenticated:
         news = db_sess.query(News).filter((News.user == current_user) | (News.is_private != True)) \
             .order_by(News.id.desc()).all()
     else:
         news = db_sess.query(News).filter(News.is_private != True).order_by(News.id.desc()).all()
-    return render_template("index.html", news=news, img=img, lenta='lenta')
+    return render_template("index.html", news=news, img=current_user.img, lenta='lenta')
 
 
 @app.route("/news_local", methods=['GET', 'POST'])
@@ -104,6 +101,7 @@ def reqister():
             user = User(
                 name=request.form.get('username'),
                 email=request.form.get('email'),
+                img=' '
             )
             user.set_password(request.form.get('pass1'))
             db_sess.add(user)
