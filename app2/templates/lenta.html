@@ -47,8 +47,8 @@
         </div>
         <aside id="sidebar" class="sidebar c-4-12 mts-sidebar-sidebar" itemscope="">
             <div>
-                {% if img %}
-                <img src="{{ url_for('static', filename='img/' + img)}}" width="230" height="200"
+                {% if current_user.is_authenticated and current_user.img %}
+                <img src="{{ url_for('static', filename='img/' + current_user.img)}}" width="230" height="200"
                      alt="Произошла ошибка">
                 {% else %}
                 <img src="{{ url_for('static', filename='img/cat.jpg')}}" width="230" height="200"

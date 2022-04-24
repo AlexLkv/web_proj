@@ -67,7 +67,7 @@ def index1():
             .order_by(News.id.desc()).all()
     else:
         news = db_sess.query(News).filter(News.is_private != True).order_by(News.id.desc()).all()
-    return render_template("index.html", news=news, img=user.img, lenta='lenta')
+    return render_template("index.html", news=news, lenta='lenta')
 
 
 @app.route("/news_local", methods=['GET', 'POST'])
@@ -101,7 +101,7 @@ def reqister():
             user = User(
                 name=request.form.get('username'),
                 email=request.form.get('email'),
-                img=' '
+                img=''
             )
             user.set_password(request.form.get('pass1'))
             db_sess.add(user)
@@ -239,7 +239,7 @@ def home_page(id):
         news = db_sess.query(News).filter(
             News.user_id == id)
         your_count = news.count()
-    return render_template('index.html', news=news, lenta="home_page", your_count=your_count, user_id=id)
+    return render_template('index.html', news=news, lenta="home_page", img=current_user.img, your_count=your_count, user_id=id)
 
 
 @app.route("/home_page/<int:id>/<int:id_category>", methods=["GET", "POST"])
