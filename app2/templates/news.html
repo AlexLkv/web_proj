@@ -1,6 +1,6 @@
-{% extends "ind.html" %}
+{% extends "lenta.html" %}
 
-{% block content %}
+{% block content1 %}
 <h1>Добавление новости</h1>
 <form action="" method="post">
     {{ form.hidden_tag() }}
@@ -12,6 +12,15 @@
                 {{ error }}
             </p>
         {% endfor %}
+    </p>
+    <p>
+        <select name="association">
+            <option value="1">Развлечение</option>
+            <option value="2">Мир</option>
+            <option value="3">Наши новости</option>
+            <option value="4">Компьютерные технологии</option>
+            <option value="5">Для детей</option>
+        </select>
     </p>
     <p>
         {{ form.content.label }}<br>

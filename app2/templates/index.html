@@ -1,18 +1,24 @@
-{% extends "ind.html" %}
+{% extends lenta + ".html" %}
 
-{% block content %}
-<h1 align="center">Записи пользователей</h1>
+{% block content1 %}
 {% for item in news%}
 <article class="latestPost excerpt">
     <div class="post-info">
         <div class="post-info-left">
-            <div class="author-image"><img alt=""
-                                           src="https://secure.gravatar.com/avatar/739cd013b007c9abeaf2927f796225b9?s=60&amp;d=mm&amp;r=g"
-                                           class="avatar avatar-60 photo" height="60"
-                                           width="60"
-                                           loading="lazy"></div>
+            {% if item.user.img %}
+            <div class="mts-profile-avatar"><img alt=''
+                                                 src="{{ url_for('static', filename='img/' + current_user.img)}}"
+                                                 class='avatar avatar-90 photo' height='90' width="90"
+                                                 loading='lazy'/></div>
+            {% else %}
+            <div class="mts-profile-avatar"><img alt=''
+                                                 src="{{ url_for('static', filename='img/cat.jpg')}}"
+                                                 class='avatar avatar-90 photo' height='90' width="90"
+                                                 loading='lazy'/>
+            </div>
+            {% endif %}
             <div class="author-info">
-                <div class="vcard"><a
+                <div class="vcard"><a href="/home_page/{{ item.user.id }}"
                         class="fn">{{ item.user.name }}</a></div>
                 <div class="thetime updated"><span>{{item.created_date}}</span></div>
             </div>
@@ -58,7 +64,7 @@
     <div class="front-view-content">
         {{item.content}}
     </div>
-        {% if current_user.is_authenticated and current_user == item.user %}
+    {% if current_user.is_authenticated and current_user == item.user %}
     <div>
         <a href="/news/{{ item.id }}" class="btn btn-dark">
             Изменить
@@ -70,6 +76,6 @@
     {% endif %}
 </article>
 {% endfor %}
-<div> <h5 align="center"><br><br>На этом пока всё.&#128532; Удачи!
+<div><h5 align="center"><br><br>На этом пока всё.&#128532; Удачи!
     <br><br></h5></div>
 {% endblock %}

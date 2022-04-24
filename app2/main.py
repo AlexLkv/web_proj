@@ -65,13 +65,12 @@ def index1():
         db_sess.commit()
         img = os.listdir('static/img')
 
-    news = db_sess.query(News).filter(News.is_private != True).order_by(News.id.desc()).all()
     if current_user.is_authenticated:
-        news = db_sess.query(News).filter((News.user == current_user) | (News.is_private != True))\
+        news = db_sess.query(News).filter((News.user == current_user) | (News.is_private != True)) \
             .order_by(News.id.desc()).all()
     else:
         news = db_sess.query(News).filter(News.is_private != True).order_by(News.id.desc()).all()
-    return render_template("index.html", news=news, img=img)
+    return render_template("index.html", news=news, img=img, lenta='lenta')
 
 
 @app.route("/news_local", methods=['GET', 'POST'])
@@ -145,6 +144,7 @@ def add_news():
         news.title = form.title.data
         news.content = form.content.data
         news.is_private = form.is_private.data
+        news.category_id = request.form.get('association')
         current_user.news.append(news)
         db_sess.merge(current_user)
         db_sess.commit()
@@ -207,6 +207,7 @@ def edit_news(id):
         if news:
             news.title = form.title.data
             news.content = form.content.data
+            news.category_id = request.form.get('association')
             news.is_private = form.is_private.data
             db_sess.commit()
             return redirect('/')
@@ -214,8 +215,7 @@ def edit_news(id):
             abort(404)
     return render_template('news.html',
                            title='Редактирование новости',
-                           form=form
-                           )
+                           form=form)
 
 
 @app.route('/news_delete/<int:id>', methods=['GET', 'POST'])
@@ -231,6 +231,28 @@ def news_delete(id):
     else:
         abort(404)
     return redirect('/')
+
+
+@app.route("/home_page/<int:id>", methods=["GET", "POST"])
+@login_required
+def home_page(id):
+    if current_user.is_authenticated:
+        db_sess = db_session.create_session()
+        news = db_sess.query(News).filter(
+            News.user_id == id)
+        your_count = news.count()
+    return render_template('index.html', news=news, lenta="home_page", your_count=your_count, user_id=id)
+
+
+@app.route("/home_page/<int:id>/<int:id_category>", methods=["GET", "POST"])
+@login_required
+def home_page_funny(id, id_category):
+    if current_user.is_authenticated:
+        db_sess = db_session.create_session()
+        news = db_sess.query(News).filter(
+            News.user_id == id, News.category_id == id_category)
+        your_count = news.count()
+    return render_template('index.html', news=news, lenta="home_page", your_count=your_count, user_id=id)
 
 
 if __name__ == '__main__':
