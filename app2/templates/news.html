@@ -23,12 +23,6 @@
         </select>
     </p>
     <p>
-        {% if form.img %}
-    <div class="featured-thumbnail">
-            <img src="{{ url_for('static', filename='img_news/' + form.img)}}"
-                 class="wp-post-image" width="530" height="250">
-            </div>
-        {% endif %}
         <input type="file" name="f" accept="image/*">
     </p>
     <p>
