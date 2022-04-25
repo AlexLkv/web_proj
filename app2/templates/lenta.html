@@ -6,8 +6,8 @@
             <div id="content_box">
                 <div class="featured-stories-tabs clearfix">
                     <div class="btn-group" role="group" aria-label="Basic outlined example">
-                        <a href="#" class="btn btn-outline-dark" role="button">Лента новостей</a>
-                        <a href="#" class="btn btn-outline-dark" role="button">Записи пользователей</a>
+                        <a href="/about-us-tg" class="btn btn-outline-dark" role="button">Лента новостей</a>
+                        <a href="\" class="btn btn-outline-dark" role="button">Записи пользователей</a>
                         {% if current_user.is_authenticated %}
                         <a href="/home_page/{{ current_user.id }}" class="btn btn-outline-dark" role="button">Моя
                             страница</a>
@@ -17,7 +17,6 @@
                     </div>
                     <div id="tab-content" class="tabs-content">
                         <div id="latest-tab-content" style="">
-                            <h1 align="center">Записи пользователей</h1>
                             <main role="main" class="container">
                                 {% block content1 %}{% endblock %}
                             </main>

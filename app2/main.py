@@ -164,7 +164,7 @@ def add_news():
                            form=form)
 
 
-@app.route("/it-tech", methods=["GET"])
+@app.route("/it-tech-tg", methods=["GET"])
 def news_page4():
     urls = []
     channel_name = 'habr_com'
@@ -172,7 +172,7 @@ def news_page4():
     return render_template('news_telega.html', urls=urls)
 
 
-@app.route("/about-us", methods=["GET"])
+@app.route("/about-us-tg", methods=["GET"])
 def news_page3():
     urls = []
     channel_name = 'requiem_site'
@@ -180,7 +180,7 @@ def news_page3():
     return render_template('news_telega.html', urls=urls)
 
 
-@app.route("/world", methods=["GET"])
+@app.route("/world-tg", methods=["GET"])
 def news_page2():
     urls = []
     channel_name = 'rian_ru'
@@ -188,7 +188,7 @@ def news_page2():
     return render_template('news_telega.html', urls=urls)
 
 
-@app.route("/memes", methods=["GET"])
+@app.route("/memes-tg", methods=["GET"])
 def news_page1():
     channel_name = 'inoshapotyan'
     urls = latest_news(channel_name)
