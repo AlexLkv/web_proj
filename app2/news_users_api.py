@@ -18,7 +18,7 @@ def get_news():
     return jsonify(
         {
             'news':
-                [item.to_dict(only=('title', 'content', 'user.name'))
+                [item.to_dict(only=('title', 'content', 'user.name', 'img'))
                  for item in news]
         }
     )
@@ -33,7 +33,7 @@ def get_one_news(news_id):
     return jsonify(
         {
             'news': news.to_dict(only=(
-                'title', 'content', 'user_id', 'is_private'))
+                'title', 'content', 'user.name', 'is_private', 'img'))
         }
     )
 

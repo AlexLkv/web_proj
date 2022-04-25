@@ -12,6 +12,7 @@ from forms.news import NewsForm
 from news import News
 from users import User
 
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
@@ -143,6 +144,7 @@ def logout():
 @app.route('/news', methods=['GET', 'POST'])
 @login_required
 def add_news():
+    bukva = {'1', '2', '3', "4", "5", "6", "7", '8', "9", "0"}
     form = NewsForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
@@ -153,7 +155,7 @@ def add_news():
         news.category_id = request.form.get('association')
         if request.files['f']:
             f = request.files['f']
-            news.img = str(news.id) + '.' + str(f.filename.split('.')[-1])
+            news.img = ''.join(list(bukva)) + '.' + str(f.filename.split('.')[-1])
             image = Image.open(BytesIO(f.read()))
             image.save(f'static/img_news/{news.img}')
         current_user.news.append(news)
@@ -260,7 +262,8 @@ def home_page(id):
         news = db_sess.query(News).filter(
             News.user_id == id)
         your_count = news.count()
-    return render_template('index.html', news=news, lenta="home_page", img=current_user.img, your_count=your_count, user_id=id)
+    return render_template('index.html', news=news, lenta="home_page", img=current_user.img,
+                           your_count=your_count, user_id=id)
 
 
 @app.route("/home_page/<int:id>/<int:id_category>", methods=["GET", "POST"])
