@@ -18,14 +18,15 @@
             </div>
             {% endif %}
             <div class="author-info">
+                {% if current_user.is_authenticated %}
                 <div class="vcard"><a href="/home_page/{{ item.user.id }}"
                         class="fn">{{ item.user.name }}</a></div>
+                {% else %}
+                                    <div class="vcard"><a href="/register"
+                        class="fn">{{ item.user.name }}</a></div>
+                {% endif %}
                 <div class="thetime updated"><span>{{item.created_date}}</span></div>
             </div>
-        </div>
-        <div class="thecomment">
-            <a itemprop="interactionCount"><i class="fa fa-comment"></i>13
-                Comments</a>
         </div>
     </div>
     <header>
