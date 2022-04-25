@@ -18,12 +18,14 @@ dp = Dispatcher(bot)
 async def help(msg: types.Message):
     await bot.send_message(msg.from_user.id,
                            f'Здравствуй! Я бот сайта "-Requiem-"\n\n'
-                           f'{emoji.emojize("🟧")} Чтобы посмотреть последние новости,'
-                           f'введите команду "/show_news [кол-во новостей]"\n\n'
+                           f'{emoji.emojize("🟧")} Чтобы посмотреть последние новости 10 новостей,'
+                           f'введите команду "/show_news"\n\n'
                            f'{emoji.emojize("🟪")}Чтобы Добавить новость, введите "/add_news", но для этого нужно быть '
                            f'зарегистрированным.\n'
                            f'Введите всё по примеру, подставляя свои данные: "/add_news '
-                           f'[email]&&[password]&&[title_news]&&[content]"\n\n'
+                           f'[email]&&[password]&&[номер категории(смотрите нижи)]&&[title_news]&&[content]"'
+                           f'Категории:\n'
+                           f'1-Развлечение 2-Мир 3-Наши новости 4-Для Детей 5-Компьютерные технологии\n\n'
                            f'{emoji.emojize("🟦")}Если вы в первый раз и хотите зарегистрироваться, введите команду '
                            f'"/register" \nВведите всё по примеру, подставляя свои данные: '
                            f'"/register [our name]&&[our email]&&[password]'
@@ -33,12 +35,11 @@ async def help(msg: types.Message):
 @dp.message_handler(commands=['show_news'])
 async def show_news(msg: types.Message):
     try:
-        n = int(msg.text[11:])
         con = sqlite3.connect("app2/db/blogs.db", check_same_thread=False)
         cur = con.cursor()
         news = cur.execute(
             f"SELECT (SELECT name FROM users WHERE id = user_id), "
-            f"created_date, title, content, img FROM news ORDER BY id DESC LIMIT {n}").fetchall()
+            f"created_date, title, content, img FROM news ORDER BY id DESC LIMIT 10").fetchall()
         con.close()
         for new in news:
             await bot.send_message(msg.from_user.id, f"{emoji.emojize('✅')}{emoji.emojize('✅')}"
@@ -57,21 +58,25 @@ async def show_news(msg: types.Message):
 @dp.message_handler(commands=['add_news'])
 async def add_news(msg: types.Message):
     text = msg.text[11:-1].split(']&&[')
-    if len(text) == 4:
+    if len(text) == 5:
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.email == text[0]).first()
         await bot.send_message(msg.from_user.id, text)
         if user and user.check_password(text[1]):
-            load_user(user.id)
-            news = News()
-            news.title = text[2]
-            news.content = text[3]
-            news.is_private = False
-            user.news.append(news)
-            db_sess.merge(user)
-            db_sess.commit()
-            await bot.send_message(msg.from_user.id, "Вы успешно добавили новость! Если Хотите получить"
-                                                     "больше возможностей, переходите к нам на сайт")
+            try:
+                load_user(user.id)
+                news = News()
+                news.title = text[3]
+                news.category_id = text[2]
+                news.content = text[4]
+                news.is_private = False
+                user.news.append(news)
+                db_sess.merge(user)
+                db_sess.commit()
+                await bot.send_message(msg.from_user.id, "Вы успешно добавили новость! Если Хотите получить"
+                                                         "больше возможностей, переходите к нам на сайт")
+            except Exception:
+                await bot.send_message(msg.from_user.id, "Введённые данные неверны")
         else:
             await bot.send_message(msg.from_user.id, "Введённые данные неверны")
     else:
