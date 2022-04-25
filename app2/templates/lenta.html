@@ -1,79 +1,81 @@
 {% extends "ind.html" %}
 {% block content2 %}
-    <div id="page">
-        <div class="sidebar-left-article">
-            <div class="article">
-                <div id="content_box">
-                    <div class="featured-stories-tabs clearfix">
-                        <div class="btn-group" role="group" aria-label="Basic outlined example">
-                            <a href="#" class="btn btn-outline-dark" role="button">Лента новостей</a>
-                            <a href="#" class="btn btn-outline-dark" role="button">Записи пользователей</a>
-                            {% if current_user.is_authenticated %}
-                            <a href="/home_page/{{ current_user.id }}" class="btn btn-outline-dark" role="button">Моя страница</a>
-                            {% else %}
-                            <a href="/register" class="btn btn-outline-dark" role="button">Моя страница</a>
-                            {% endif %}
+<div id="page">
+    <div class="sidebar-left-article">
+        <div class="article">
+            <div id="content_box">
+                <div class="featured-stories-tabs clearfix">
+                    <div class="btn-group" role="group" aria-label="Basic outlined example">
+                        <a href="#" class="btn btn-outline-dark" role="button">Лента новостей</a>
+                        <a href="#" class="btn btn-outline-dark" role="button">Записи пользователей</a>
+                        {% if current_user.is_authenticated %}
+                        <a href="/home_page/{{ current_user.id }}" class="btn btn-outline-dark" role="button">Моя
+                            страница</a>
+                        {% else %}
+                        <a href="/register" class="btn btn-outline-dark" role="button">Моя страница</a>
+                        {% endif %}
+                    </div>
+                    <div id="tab-content" class="tabs-content">
+                        <div id="latest-tab-content" style="">
+                            <h1 align="center">Записи пользователей</h1>
+                            <main role="main" class="container">
+                                {% block content1 %}{% endblock %}
+                            </main>
                         </div>
-                        <div id="tab-content" class="tabs-content">
-                            <div id="latest-tab-content" style="">
-                                <h1 align="center">Записи пользователей</h1>
-                                <main role="main" class="container">
-                                    {% block content1 %}{% endblock %}
-                                </main>
-                            </div>
-                            <div id="random-tab-content" style="display: none;"></div>
-                        </div>
+                        <div id="random-tab-content" style="display: none;"></div>
                     </div>
                 </div>
             </div>
-
-            <aside id="sidebar" class="sidebar c-4-12 sidebar-left" role="complementary" itemscope=''>
-                <div id="categories-2" class="widget widget_categories">
-                    <h3 class="widget-title">Категории</h3>
-                    <ul>
-                        <li class="cat-item cat-item-2"><a
-                                href="/memes">Развлечение</a>
-                        </li>
-                        <li class="cat-item cat-item-3"><a
-                                href="/world">Мир</a>
-                        </li>
-                        <li class="cat-item cat-item-4"><a
-                                href="/about-us">Наши новости</a>
-                        </li>
-                        <li class="cat-item cat-item-5"><a
-                                href="/it-tech">Компьютерные технологии</a>
-                        </li>
-                    </ul>
-
-                </div>
-            </aside>
-            <!-- END #sidebar-with-content -->
         </div>
-        <aside id="sidebar" class="sidebar c-4-12 mts-sidebar-sidebar" itemscope="">
-            <div>
-                {% if current_user.is_authenticated and current_user.img %}
-                <img src="{{ url_for('static', filename='img/' + current_user.img)}}" width="230" height="200"
-                     alt="Произошла ошибка">
-                {% else %}
-                <img src="{{ url_for('static', filename='img/cat.jpg')}}" width="230" height="200"
-                     alt="Произошла ошибка">
-                {% endif %}
-                {% if current_user.is_authenticated %}
-                <h1 style="color: red" align="left">
-                    <a href="/home_page/{{ current_user.id }}">{{ current_user.name }}<a>
-                </h1>
-                <form enctype="multipart/form-data" method="post">
-                    <p><input type="file" name="f" accept="image/*">
-                        <input type="submit" value="Поменять аватар" style="color: blue"><br><br></p>
-                </form>
-                {% endif %}
-                <div>
-                    {% if current_user.is_authenticated %}
-                    <a href="news" class="btn btn-secondary">Добавить запись</a>
-                    {% endif %}
-                </div>
+
+        <aside id="sidebar" class="sidebar c-4-12 sidebar-left" role="complementary" itemscope=''>
+            <div id="categories-2" class="widget widget_categories">
+                <h3 class="widget-title">Категории</h3>
+                <ul>
+                    <li class="cat-item cat-item-2"><a
+                            href="/memes">Развлечение</a>
+                    </li>
+                    <li class="cat-item cat-item-3"><a
+                            href="/world">Мир</a>
+                    </li>
+                    <li class="cat-item cat-item-4"><a
+                            href="/about-us">Наши новости</a>
+                    </li>
+                    <li class="cat-item cat-item-5"><a
+                            href="/it-tech">Компьютерные технологии</a>
+                    </li>
+                    <li class="cat-item cat-item-5"><a
+                            href="/it-tech">Для детей</a>
+                    </li>
+                </ul>
             </div>
         </aside>
-
     </div>
+    <aside id="sidebar" class="sidebar c-4-12 mts-sidebar-sidebar" itemscope="">
+        <div>
+            {% if current_user.is_authenticated and current_user.img %}
+            <img src="{{ url_for('static', filename='img/' + current_user.img)}}" width="230" height="200"
+                 alt="Произошла ошибка">
+            {% else %}
+            <img src="{{ url_for('static', filename='img/cat.jpg')}}" width="230" height="200"
+                 alt="Произошла ошибка">
+            {% endif %}
+            {% if current_user.is_authenticated %}
+            <h1 style="color: red" align="left">
+                <a href="/home_page/{{ current_user.id }}">{{ current_user.name }}<a>
+            </h1>
+            <form enctype="multipart/form-data" method="post">
+                <p><input type="file" name="f" accept="image/*">
+                    <input type="submit" value="Поменять аватар" style="color: blue"><br><br></p>
+            </form>
+            {% endif %}
+            <div>
+                {% if current_user.is_authenticated %}
+                <a href="news" class="btn btn-secondary">Добавить запись</a>
+                {% endif %}
+            </div>
+        </div>
+    </aside>
+
+</div>
 {% endblock %}

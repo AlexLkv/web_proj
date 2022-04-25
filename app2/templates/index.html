@@ -36,30 +36,10 @@
     <a title=""
        id="featured-thumbnail">
         <div class="featured-thumbnail">
-            <img src="https://demo.mythemeshop.com/socialme/files/2015/04/pencil-530x250.jpg"
+            {% if item.img %}
+            <img src="{{ url_for('static', filename='img_news/' + item.img)}}"
                  class="wp-post-image" width="530" height="250">
-            <div
-                    class="review-type-star latestPost-review-wrapper wp-review-show-total wp-review-total-25 wp-review-total-star">
-                <div class="review-star">
-                    <div class="review-result-wrapper" style="color: #dedcdc;">
-                        <i class="mts-icon-star"></i>
-                        <i class="mts-icon-star"></i>
-                        <i class="mts-icon-star"></i>
-                        <i class="mts-icon-star"></i>
-                        <i class="mts-icon-star"></i>
-
-                        <div class="review-result" style="width:100%; color:#fff;">
-                            <i class="mts-icon-star"></i>
-                            <i class="mts-icon-star"></i>
-                            <i class="mts-icon-star"></i>
-                            <i class="mts-icon-star"></i>
-                            <i class="mts-icon-star"></i>
-                        </div>
-
-                    </div>
-
-                </div>
-            </div>
+            {% endif %}
         </div>
     </a>
     <div class="front-view-content">

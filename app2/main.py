@@ -143,6 +143,11 @@ def add_news():
         news.content = form.content.data
         news.is_private = form.is_private.data
         news.category_id = request.form.get('association')
+        if request.files['f']:
+            f = request.files['f']
+            news.img = str(news.id) + '.' + str(f.filename.split('.')[-1])
+            image = Image.open(BytesIO(f.read()))
+            image.save(f'static/img_news/{news.img}')
         current_user.news.append(news)
         db_sess.merge(current_user)
         db_sess.commit()
@@ -194,6 +199,7 @@ def edit_news(id):
         if news:
             form.title.data = news.title
             form.content.data = news.content
+            form.img = news.img
             form.is_private.data = news.is_private
         else:
             abort(404)
@@ -207,6 +213,11 @@ def edit_news(id):
             news.content = form.content.data
             news.category_id = request.form.get('association')
             news.is_private = form.is_private.data
+            if request.files['f']:
+                f = request.files['f']
+                news.img = str(news.id) + '.' + str(f.filename.split('.')[-1])
+                image = Image.open(BytesIO(f.read()))
+                image.save(f'static/img_news/{news.img}')
             db_sess.commit()
             return redirect('/')
         else:
@@ -225,6 +236,8 @@ def news_delete(id):
                                       ).first()
     if news:
         db_sess.delete(news)
+        if news.img:
+            os.remove(f'static/img_news/{news.img}')
         db_sess.commit()
     else:
         abort(404)
