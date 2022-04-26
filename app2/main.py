@@ -93,24 +93,29 @@ def categorys(id_category):
 @app.route('/register', methods=['GET', 'POST'])
 def reqister():
     if request.method == 'POST':
-        if request.form.get('username') and request.form.get('email') \
+        if request.form.get('username') \
                 and request.form.get('pass1') and request.form.get('pass2'):
             if request.form.get('pass1') != request.form.get('pass2'):
                 return render_template('register.html',
                                        message="Пароли не совпадают")
-            if '@' not in request.form.get('email') or '&' in request.form.get('email'):
+            try:
+                if request.form.get('name_in_telega'):
+                    a = int(request.form.get('name_in_telega'))
+                    db_sess = db_session.create_session()
+                    user = User(
+                        name=request.form.get('username'),
+                        name_in_telega=a,
+                        img=''
+                    )
+                else:
+                    db_sess = db_session.create_session()
+                    user = User(
+                        name=request.form.get('username'),
+                        img=''
+                    )
+            except TypeError:
                 return render_template('register.html',
-                                       message="В логине нет '@' или есть '&'")
-            db_sess = db_session.create_session()
-
-            if db_sess.query(User).filter(User.email == request.form.get('email')).first():
-                return render_template('register.html',
-                                       message="Такой пользователь уже есть")
-            user = User(
-                name=request.form.get('username'),
-                email=request.form.get('email'),
-                img=''
-            )
+                                       message="Не верный формат ID")
             user.set_password(request.form.get('pass1'))
             db_sess.add(user)
             db_sess.commit()
@@ -121,9 +126,9 @@ def reqister():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        if request.form.get('email') and request.form.get('pass'):
+        if request.form.get('name') and request.form.get('pass'):
             db_sess = db_session.create_session()
-            user = db_sess.query(User).filter(User.email == request.form.get('email')).first()
+            user = db_sess.query(User).filter(User.name == request.form.get('name')).first()
 
             if user and user.check_password(request.form.get('pass')):
                 login_user(user)
