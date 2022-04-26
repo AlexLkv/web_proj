@@ -98,6 +98,9 @@ def reqister():
             if request.form.get('pass1') != request.form.get('pass2'):
                 return render_template('register.html',
                                        message="Пароли не совпадают")
+            if '-' in request.form.get('username'):
+                return render_template('register.html',
+                                       message="В нике недопустимый знак '-'")
             try:
                 if request.form.get('name_in_telega'):
                     a = int(request.form.get('name_in_telega'))
