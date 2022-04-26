@@ -1,7 +1,6 @@
 import random
 import sqlite3
 
-import emoji
 from aiogram import Bot, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import Dispatcher, FSMContext
@@ -78,11 +77,11 @@ async def bot_start(message: types.Message):
 @dp.message_handler(commands=['help'])
 async def help(msg: types.Message):
     await bot.send_message(msg.from_user.id,
-                           f'~~~~~~~~~~~~Здравствуй! Я бот сайта Requiem~~~~~~~~~~~~\n\n'
+                           f'~~Здравствуй! Я бот сайта Requiem~~\n\n'
                            f'° - "/show_news" - посмотреть последние новости,\n'
                            f'° - "/add_news"- добавить новость (требуется авторизация) \n'
                            f'° - "/register" - регистрация в нашей соц-сети примиком из бота'
-                           f'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+                           f'~~~~~~~~~~~~~~~~')
 
 
 @dp.message_handler(commands=['info'])
@@ -102,7 +101,7 @@ async def info(msg: types.Message):
                                                  f"")
 
 
-@dp.message_handler(commands=['add_id'])
+@dp.message_handler(commands=['add_id']) #ДОПИЛИТЬ ВЫВОД СООБЩЕНИЯ ЕСЛИ НЕТУ СООБЩЕНИЯ
 async def add_id(msg: types.Message):
     try:
         text = msg.text[9:-1].split(']-[')
@@ -132,74 +131,66 @@ async def show_news(msg: types.Message):
         con.close()
         for new in news:
             if not new[4]:
-                await bot.send_message(msg.from_user.id, f"{emoji.emojize('🧸')}Автор записи - {new[0]}\n"
-                                                         f"{emoji.emojize('📆')}Дата создания - {new[1]}\n"
-                                                         f"Заголовок - {new[2]}\n"
-                                                         f"Контекст - {new[3]}")
+                await bot.send_message(msg.from_user.id,f"~~~~~~~-Requiem-~~~~~~~\n\n"
+                                                         f"° - Автор записи: {new[0]}- °\n° - Дата: {new[1][:-10]} - °\n"
+                                                         f"--------------Заголовок-----------------\n"
+                                                         f"{new[2]}\n"
+                                                         f"--------------Содержание--------------\n"
+                                                         f"{new[3]}")
             else:
                 photo = open(f'app2/static/img_news/{new[4]}', 'rb')
-                await bot.send_photo(msg.from_user.id, caption=f"{emoji.emojize('✅')}{emoji.emojize('✅')}"
-                                                               f"{emoji.emojize('✅')}{emoji.emojize('✅')}\n"
-                                                               f"{emoji.emojize('🧸')}Автор записи - {new[0]}\n"
-                                                               f"{emoji.emojize('📆')}Дата создания - {new[1]}\n"
-                                                               f"Заголовок - {new[2]}\n"
-                                                               f"Контекст - {new[3]}", photo=photo)
+                await bot.send_photo(msg.from_user.id, caption=f"~~~~~~~-Requiem-~~~~~~~\n\n"
+                                                         f"° - Автор записи: {new[0]}- °\n° - Дата: {new[1][:-10]} - °\n"
+                                                         f"--------------Заголовок-----------------\n"
+                                                         f"{new[2]}\n"
+                                                         f"--------------Содержание--------------\n"
+                                                         f"{new[3]}", photo=photo)
     except TypeError:
         await bot.send_message(msg.from_user.id, "Неверные данные")
 
 
-@dp.message_handler(commands=['add_news'])
+@dp.message_handler(commands=['add_news']) #ДОПИЛИТЬ ВЫВОД СООБЩЕНИЯ ЕСЛИ НЕТУ СООБЩЕНИЯ
 async def add_news(msg: types.Message):
     text = msg.text[11:-1].split(']-[')
-    if not text:
-        await bot.send_message(msg.from_user.id,
-                               f"~~~~~~~~~~~~~~~~~~~~~~~-Requiem-~~~~~~~~~~~~~~~~~~~~~~~\n"
-                               f"Введите пожалуйста данные в формате:\n"
-                               f'"/add_news [Категория новости]-[Заголовок]-[Содержание]\n"'
-                               f'Категории новостей:\n'
-                               f'1 - Развлечение \n'
-                               f'2 - Мир \n'
-                               f'3 - Наши новости \n'
-                               f'4 - Для Детей \n'
-                               f'5 - Компьютерные технологии\n\n'
-                               f'**Примечание: \n'
-                               f'Логин и пароль используются от аккаунта соц-сети.\n'
-                               f'Если вы еще не зарегистрированы - /register.\n'
-                               f"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-    elif len(text) == 3:
+
+    if len(text) == 3:
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.name_in_telega == msg.from_user.id).first()
         await bot.send_message(msg.from_user.id, user.name_in_telega)
-        if user:
-            try:
-                load_user(user.id)
-                news = News()
-                news.title = text[1]
-                news.category_id = text[0]
-                news.content = text[2]
-                news.is_private = False
-                user.news.append(news)
-                db_sess.merge(user)
-                db_sess.commit()
-                await bot.send_message(msg.from_user.id, "Вы успешно добавили новость! Если Хотите получить"
-                                                         "больше возможностей, переходите к нам на сайт")
-            except Exception:
-                await bot.send_message(msg.from_user.id, "Введённые данные неверны")
-        else:
-            await bot.send_message(msg.from_user.id, "Введённые данные неверны")
+        try:
+            load_user(user.id)
+            news = News()
+            news.title = text[1]
+            news.category_id = text[0]
+            news.content = text[2]
+            news.is_private = False
+            user.news.append(news)
+            db_sess.merge(user)
+            db_sess.commit()
+            await bot.send_message(msg.from_user.id, "Вы успешно добавили новость! Если Хотите получить"
+                                                     "больше возможностей, переходите к нам на сайт")
+        except Exception:
+            await bot.send_message(msg.from_user.id,
+                                   f"~~~~~~~-Requiem-~~~~~~~\n"
+                                   f"Введите пожалуйста данные в формате:\n"
+                                   f'"/add_news [Категория новости]-[Заголовок]-[Содержание]\n"'
+                                   f'Категории новостей:\n'
+                                   f'1 - Развлечение \n'
+                                   f'2 - Мир \n'
+                                   f'3 - Наши новости \n'
+                                   f'4 - Для Детей \n'
+                                   f'5 - Компьютерные технологии\n\n'
+                                   f'**Примечание: \n'
+                                   f'Логин и пароль используются от аккаунта соц-сети.\n'
+                                   f'Если вы еще не зарегистрированы - /register.\n'
+                                   f"~~~~~~~~~~~~~~")
 
 
 @dp.message_handler(commands=['register'])
 async def register(msg: types.Message):
     text = msg.text[11:-1].split(']-[')
 
-    if not text:
-        await bot.send_message(msg.from_user.id, f"~~~~~~~~~~~~~~~~~~~~~-Requiem-~~~~~~~~~~~~~~~~~~~~~\n"
-                                                 f"Введите пожалуйста данные в формате:\n"
-                                                 f'"/register [Ник]-[Пароль]-[Еще раз пароль]"'
-                                                 f"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-
-    elif len(text) == 3 and text[1] == text[2]:
+    if len(text) == 3 and text[1] == text[2]:
         db_sess = db_session.create_session()
         if db_sess.query(User).filter(User.name == text[0]).first():
             await bot.send_message(msg.from_user.id, "Такой пользователь уже есть")
@@ -213,7 +204,10 @@ async def register(msg: types.Message):
             db_sess.commit()
             await bot.send_message(msg.from_user.id, "Ваш аккаунт успешно зарегистрирован!")
     else:
-        await bot.send_message(msg.from_user.id, "Пароли не верны")
+        await bot.send_message(msg.from_user.id, f"~~~~~~~-Requiem-~~~~~~~\n"
+                                                 f"Введите пожалуйста данные в формате:\n"
+                                                 f'"/register [Ник]-[Пароль]-[Еще раз пароль]"'
+                                                 f"~~~~~~~~~~~~~~")
 
 
 @dp.message_handler(commands=["game"])
