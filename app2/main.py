@@ -85,9 +85,8 @@ def news_local():
 
 @app.route("/categorys/<int:id_category>", methods=['GET', 'POST'])
 def categorys(id_category):
-    if current_user.is_authenticated:
-        db_sess = db_session.create_session()
-        news = db_sess.query(News).filter(News.category_id == id_category)
+    db_sess = db_session.create_session()
+    news = db_sess.query(News).filter(News.category_id == id_category)
     return render_template('index.html', news=news, lenta="lenta")
 
 
