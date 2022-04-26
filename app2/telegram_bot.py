@@ -85,6 +85,23 @@ async def help(msg: types.Message):
                            f'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
 
 
+@dp.message_handler(commands=['info'])
+async def info(msg: types.Message):
+    db_sess = db_session.create_session()
+    user = db_sess.query(User).filter(User.name_in_telega == msg.from_user.id).first()
+    if user:
+        if user.img:
+            photo = open(f'app2/static/img/{user.img}', 'rb')
+        else:
+            photo = open(f'app2/static/img/cat.jpg', 'rb')
+        await bot.send_photo(msg.from_user.id, caption=f"ник-{user.name}\n"
+                                                       f"id вашего телеграмм-{user.name_in_telega}\n", photo=photo)
+
+    else:
+        await bot.send_message(msg.from_user.id, f"Упс, кажется я вас не нашёл"
+                                                 f"")
+
+
 @dp.message_handler(commands=['add_id'])
 async def add_id(msg: types.Message):
     try:
@@ -114,15 +131,19 @@ async def show_news(msg: types.Message):
             f"created_date, title, content, img FROM news ORDER BY id DESC LIMIT 10").fetchall()
         con.close()
         for new in news:
-            await bot.send_message(msg.from_user.id, f"{emoji.emojize('✅')}{emoji.emojize('✅')}"
-                                                     f"{emoji.emojize('✅')}{emoji.emojize('✅')}\n"
-                                                     f"{emoji.emojize('🧸')}Автор записи - {new[0]}\n"
-                                                     f"{emoji.emojize('📆')}Дата создания - {new[1]}\n"
-                                                     f"Заголовок - {new[2]}\n"
-                                                     f"Контекст - {new[3]}")
-            if new[4]:
+            if not new[4]:
+                await bot.send_message(msg.from_user.id, f"{emoji.emojize('🧸')}Автор записи - {new[0]}\n"
+                                                         f"{emoji.emojize('📆')}Дата создания - {new[1]}\n"
+                                                         f"Заголовок - {new[2]}\n"
+                                                         f"Контекст - {new[3]}")
+            else:
                 photo = open(f'app2/static/img_news/{new[4]}', 'rb')
-                await bot.send_photo(msg.from_user.id, photo)
+                await bot.send_photo(msg.from_user.id, caption=f"{emoji.emojize('✅')}{emoji.emojize('✅')}"
+                                                               f"{emoji.emojize('✅')}{emoji.emojize('✅')}\n"
+                                                               f"{emoji.emojize('🧸')}Автор записи - {new[0]}\n"
+                                                               f"{emoji.emojize('📆')}Дата создания - {new[1]}\n"
+                                                               f"Заголовок - {new[2]}\n"
+                                                               f"Контекст - {new[3]}", photo=photo)
     except TypeError:
         await bot.send_message(msg.from_user.id, "Неверные данные")
 
