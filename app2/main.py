@@ -58,6 +58,7 @@ def index1():
     if request.method == 'POST':
         f = request.files['f']
         user = db_sess.query(User).filter(User.id == current_user.id).first()
+        os.remove(f'static/img/{user.img}')
         user.img = str(current_user.id) + '.' + str(f.filename.split('.')[-1])
         db_sess.commit()
         image = Image.open(BytesIO(f.read()))

@@ -57,10 +57,10 @@
         <div>
             {% if current_user.is_authenticated and current_user.img %}
             <img src="{{ url_for('static', filename='img/' + current_user.img)}}" width="230" height="200"
-                 alt="Произошла ошибка">
+                 alt="Перезагрузите страницу">
             {% else %}
             <img src="{{ url_for('static', filename='img/cat.jpg')}}" width="230" height="200"
-                 alt="Произошла ошибка">
+                 alt="Перезагрузите страницу">
             {% endif %}
             {% if current_user.is_authenticated %}
             <h1 style="color: red" align="left">
