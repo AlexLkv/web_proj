@@ -80,7 +80,9 @@ async def help(msg: types.Message):
                            f'~~Здравствуй! Я бот сайта Requiem~~\n\n'
                            f'° - "/show_news" - посмотреть последние новости,\n'
                            f'° - "/add_news"- добавить новость (требуется авторизация) \n'
-                           f'° - "/register" - регистрация в нашей соц-сети примиком из бота'
+                           f'° - "/register" - регистрация в нашей соц-сети примиком из бота\n'
+                           f'° - "/add_id" - добавить id уже к существующему аккаунту\n'
+                           f'° - "/info" - посмотреть информацию об аккаунте\n'
                            f'~~~~~~~~~~~~~~~~')
 
 
@@ -101,23 +103,26 @@ async def info(msg: types.Message):
                                                  f"")
 
 
-@dp.message_handler(commands=['add_id']) #ДОПИЛИТЬ ВЫВОД СООБЩЕНИЯ ЕСЛИ НЕТУ СООБЩЕНИЯ
+@dp.message_handler(commands=['add_id'])
 async def add_id(msg: types.Message):
     try:
         text = msg.text[9:-1].split(']-[')
-        db_sess = db_session.create_session()
-        user = db_sess.query(User).filter(User.name == text[0]).first()
-        if user:
-            if user.check_password(text[1]):
-                user.name_in_telega = msg.from_user.id
-                db_sess.commit()
-                await bot.send_message(msg.from_user.id, "Всё успешно добавлено")
+        if len(text) == 2:
+            db_sess = db_session.create_session()
+            user = db_sess.query(User).filter(User.name == text[0]).first()
+            if user:
+                if user.check_password(text[1]):
+                    user.name_in_telega = msg.from_user.id
+                    db_sess.commit()
+                    await bot.send_message(msg.from_user.id, "Всё успешно добавлено")
+                else:
+                    await bot.send_message(msg.from_user.id, "Неверный пароль")
             else:
-                await bot.send_message(msg.from_user.id, "Неверный пароль")
+                await bot.send_message(msg.from_user.id, "Такого имя пользователя не существует")
         else:
-            await bot.send_message(msg.from_user.id, "Такого имя пользователя не существует")
+            await bot.send_message(msg.from_user.id, "Введите данный по примеру /add_id [имя]-[пароль]")
     except Exception:
-        await bot.send_message(msg.from_user.id, "Неправильно введены данные")
+        await bot.send_message(msg.from_user.id, "Введите данный по примеру /add_id [имя]-[пароль]")
 
 
 @dp.message_handler(commands=['show_news'])
@@ -131,7 +136,7 @@ async def show_news(msg: types.Message):
         con.close()
         for new in news:
             if not new[4]:
-                await bot.send_message(msg.from_user.id,f"~~~~~~~-Requiem-~~~~~~~\n\n"
+                await bot.send_message(msg.from_user.id, f"~~~~~~~-Requiem-~~~~~~~\n\n"
                                                          f"° - Автор записи: {new[0]}- °\n° - Дата: {new[1][:-10]} - °\n"
                                                          f"--------------Заголовок-----------------\n"
                                                          f"{new[2]}\n"
@@ -140,50 +145,47 @@ async def show_news(msg: types.Message):
             else:
                 photo = open(f'app2/static/img_news/{new[4]}', 'rb')
                 await bot.send_photo(msg.from_user.id, caption=f"~~~~~~~-Requiem-~~~~~~~\n\n"
-                                                         f"° - Автор записи: {new[0]}- °\n° - Дата: {new[1][:-10]} - °\n"
-                                                         f"--------------Заголовок-----------------\n"
-                                                         f"{new[2]}\n"
-                                                         f"--------------Содержание--------------\n"
-                                                         f"{new[3]}", photo=photo)
+                                                               f"° - Автор записи: {new[0]}- °\n° - Дата: {new[1][:-10]} - °\n"
+                                                               f"--------------Заголовок-----------------\n"
+                                                               f"{new[2]}\n"
+                                                               f"--------------Содержание--------------\n"
+                                                               f"{new[3]}", photo=photo)
     except TypeError:
         await bot.send_message(msg.from_user.id, "Неверные данные")
 
 
-@dp.message_handler(commands=['add_news']) #ДОПИЛИТЬ ВЫВОД СООБЩЕНИЯ ЕСЛИ НЕТУ СООБЩЕНИЯ
+@dp.message_handler(commands=['add_news'])  # ДОПИЛИТЬ ВЫВОД СООБЩЕНИЯ ЕСЛИ НЕТУ СООБЩЕНИЯ
 async def add_news(msg: types.Message):
     text = msg.text[11:-1].split(']-[')
-
-    if len(text) == 3:
-        db_sess = db_session.create_session()
-        user = db_sess.query(User).filter(User.name_in_telega == msg.from_user.id).first()
-        await bot.send_message(msg.from_user.id, user.name_in_telega)
-        try:
-            load_user(user.id)
-            news = News()
-            news.title = text[1]
-            news.category_id = text[0]
-            news.content = text[2]
-            news.is_private = False
-            user.news.append(news)
-            db_sess.merge(user)
-            db_sess.commit()
-            await bot.send_message(msg.from_user.id, "Вы успешно добавили новость! Если Хотите получить"
-                                                     "больше возможностей, переходите к нам на сайт")
-        except Exception:
-            await bot.send_message(msg.from_user.id,
-                                   f"~~~~~~~-Requiem-~~~~~~~\n"
-                                   f"Введите пожалуйста данные в формате:\n"
-                                   f'"/add_news [Категория новости]-[Заголовок]-[Содержание]\n"'
-                                   f'Категории новостей:\n'
-                                   f'1 - Развлечение \n'
-                                   f'2 - Мир \n'
-                                   f'3 - Наши новости \n'
-                                   f'4 - Для Детей \n'
-                                   f'5 - Компьютерные технологии\n\n'
-                                   f'**Примечание: \n'
-                                   f'Логин и пароль используются от аккаунта соц-сети.\n'
-                                   f'Если вы еще не зарегистрированы - /register.\n'
-                                   f"~~~~~~~~~~~~~~")
+    db_sess = db_session.create_session()
+    user = db_sess.query(User).filter(User.name_in_telega == msg.from_user.id).first()
+    try:
+        load_user(user.id)
+        news = News()
+        news.title = text[1]
+        news.category_id = text[0]
+        news.content = text[2]
+        news.is_private = False
+        user.news.append(news)
+        db_sess.merge(user)
+        db_sess.commit()
+        await bot.send_message(msg.from_user.id, "Вы успешно добавили новость! Если Хотите получить"
+                                                 "больше возможностей, переходите к нам на сайт")
+    except Exception:
+        await bot.send_message(msg.from_user.id,
+                               f"~~~~~~~-Requiem-~~~~~~~\n"
+                               f"Введите пожалуйста данные в формате:\n"
+                               f'"/add_news [Категория новости]-[Заголовок]-[Содержание]\n"'
+                               f'Категории новостей:\n'
+                               f'1 - Развлечение \n'
+                               f'2 - Мир \n'
+                               f'3 - Наши новости \n'
+                               f'4 - Для Детей \n'
+                               f'5 - Компьютерные технологии\n\n'
+                               f'**Примечание: \n'
+                               f'Логин и пароль используются от аккаунта соц-сети.\n'
+                               f'Если вы еще не зарегистрированы - /register.\n'
+                               f"~~~~~~~~~~~~~~")
 
 
 @dp.message_handler(commands=['register'])
