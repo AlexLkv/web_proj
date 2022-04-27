@@ -58,7 +58,8 @@ def index1():
     if request.method == 'POST':
         f = request.files['f']
         user = db_sess.query(User).filter(User.id == current_user.id).first()
-        os.remove(f'static/img/{user.img}')
+        if user.img:
+            os.remove(f'static/img/{user.img}')
         user.img = str(current_user.id) + '.' + str(f.filename.split('.')[-1])
         db_sess.commit()
         image = Image.open(BytesIO(f.read()))
@@ -177,14 +178,14 @@ def add_news():
 @app.route("/it-tech-tg", methods=["GET"])
 def news_page4():
     urls = []
-    channel_name = 'habr_com'
-    urls = latest_news(channel_name)
-    return render_template('news_telega.html', urls=urls)
+    channel_name = ['habr_com', 'it_memes_tg', 'howdyho_official']
+    for i in channel_name:
+        urls = urls + latest_news(i)
+    return render_template('news_telega.html', urls=list(set(urls)))
 
 
 @app.route("/about-us-tg", methods=["GET"])
 def news_page3():
-    urls = []
     channel_name = 'requiem_site'
     urls = latest_news(channel_name)
     return render_template('news_telega.html', urls=urls)
@@ -193,16 +194,19 @@ def news_page3():
 @app.route("/world-tg", methods=["GET"])
 def news_page2():
     urls = []
-    channel_name = 'rian_ru'
-    urls = latest_news(channel_name)
-    return render_template('news_telega.html', urls=urls)
+    channel_name = ['rian_ru', 'toporlive', 'SolovievLive']
+    for i in channel_name:
+        urls = urls + latest_news(i)
+    return render_template('news_telega.html', urls=list(set(urls)))
 
 
 @app.route("/memes-tg", methods=["GET"])
 def news_page1():
-    channel_name = 'inoshapotyan'
-    urls = latest_news(channel_name)
-    return render_template('news_telega.html', urls=urls)
+    urls =[]
+    channel_name = ['inoshapotyan', 'mudak', 'ligapsh']
+    for i in channel_name:
+        urls = urls + latest_news(i)
+    return render_template('news_telega.html', urls=list(set(urls)))
 
 
 @app.route('/news/<int:id>', methods=['GET', 'POST'])
