@@ -30,7 +30,7 @@ def latest_news(channel_name):
     url = url.replace('https://t.me/', '')
     channel_name, news_id = url.split('/')
     urls = []
-    for i in range(10):
+    for i in range(7):
         urls.append(f'{channel_name}/{int(news_id) - i}')
     return urls
 
@@ -202,8 +202,8 @@ def news_page2():
 
 @app.route("/memes-tg", methods=["GET"])
 def news_page1():
-    urls =[]
-    channel_name = ['inoshapotyan', 'mudak', 'ligapsh']
+    urls = []
+    channel_name = ['mudak', 'ligapsh']
     for i in channel_name:
         urls = urls + latest_news(i)
     return render_template('news_telega.html', urls=list(set(urls)))
