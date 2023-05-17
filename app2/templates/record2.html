@@ -1,0 +1,17 @@
+{% extends "record.html" %}
+
+{% block content %}
+<select id="select_page" style="width:400px;" class="operator" name="hospital_id">
+    <option value="">Выберите ветиренарную клинику:</option>
+    {% for item in values %}
+    <option value="{{ item.country_name_en }}">{{ item.hospital_name }}</option>
+    {% endfor %}
+</select>
+<div>
+    <button class="login100-form-btn" type="submit">
+        <a class="txt2 hov1">
+            Далее
+        </a>
+    </button>
+</div>
+{% endblock %}

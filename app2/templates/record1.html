@@ -1,0 +1,19 @@
+{% extends "record.html" %}
+
+{% block content %}
+<form action="/record/1" method="post">
+    <select id="select_page_country" name='select_page_country' style="width:400px;" class="operator">
+        <option value="">Выберите город:</option>
+        {% for item in values %}
+        <option value="{{ item.id }}">{{ item.country_name }}</option>
+        {% endfor %}
+    </select>
+    <div>
+        <button class="login100-form-btn" type="submit">
+            <a class="txt2 hov1">
+                Далее
+            </a>
+        </button>
+    </div>
+</form>
+{% endblock %}

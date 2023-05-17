@@ -1,0 +1,18 @@
+{% extends "register.html" %}
+
+{% block content %}
+<form action="/validateOTP" method="post">
+    <div class="wrap-input100 validate-input m-b-20">
+        <input class="input100" type="text" name="otp" id="code"
+               placeholder="Введите код:">
+        <span class="focus-input100"></span>
+    </div>
+    <div class="container-login100-form-btn">
+        <button class="login100-form-btn" type="submit">
+            <a class="txt2 hov1">
+                Продолжить
+            </a>
+        </button>
+    </div>
+</form>
+{% endblock %}

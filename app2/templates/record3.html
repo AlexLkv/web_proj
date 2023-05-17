@@ -1,0 +1,18 @@
+{% extends "record.html" %}
+
+{% block content %}
+<h1 align="center">Запись к врачу</h1>
+<select id="select_page" style="width:400px;" class="operator" name="veterinarian_id">
+    <option value="">Выберите врача:</option>
+    {% for item in values %}
+    <option value="{{ item.id }}">item.name</option>
+    {% endfor %}
+</select>
+<div>
+    <button class="login100-form-btn" type="submit">
+        <a class="txt2 hov1">
+            Далее
+        </a>
+    </button>
+</div>
+{% endblock %}

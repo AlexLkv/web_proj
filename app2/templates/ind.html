@@ -704,11 +704,12 @@ h6 { font-family: 'Signika Negative'; font-weight: normal; font-size: 20px; colo
                 <div id="header">
                     <div class="logo-wrap">
                         <h1 id="logo" class="image-logo" itemprop="headline">
-                            <a href="\"> - Requiem || Реквием -
+                            <a href="\"> -Home animals-
                                     {% if not current_user.is_authenticated %}
                                     <div class="login-menu"><a href="/login">Вход</a></div>
                                     <div class="login-menu"><a href="/register">Регистрация</a></div>
                                     {% else %}
+                                <div class="login-menu"><a href="/record/1">Записаться к врачу</a></div>
                                 <div class="login-menu"><a class="navbar-brand" href="/logout">Выйти</a></div>
                                     {% endif %}
                             </a>

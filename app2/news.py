@@ -1,9 +1,8 @@
 import datetime
 import sqlalchemy
 from sqlalchemy import orm
+from database import SqlAlchemyBase
 from sqlalchemy_serializer import SerializerMixin
-
-from db_session import SqlAlchemyBase
 
 
 class News(SqlAlchemyBase, SerializerMixin):
@@ -17,8 +16,6 @@ class News(SqlAlchemyBase, SerializerMixin):
                                      default=datetime.datetime.now)
     is_private = sqlalchemy.Column(sqlalchemy.Boolean, default=True)
     img = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    category_id = sqlalchemy.Column(sqlalchemy.Integer,
-                                    sqlalchemy.ForeignKey("category.id"))
     user_id = sqlalchemy.Column(sqlalchemy.Integer,
                                 sqlalchemy.ForeignKey("users.id"))
     user = orm.relation('User')
